@@ -71,6 +71,9 @@ func registerCommonFlags(cmd *cobra.Command) {
 		"limit the number of threads spawned by the plugin for executing the 'kubectl diff' command. "+
 			"This helps in batching tasks efficiently without overwhelming system resources. "+
 			"By default, it is set to match the number of manifests present in the Helm chart or release.")
+	cmd.PersistentFlags().StringVarP(&drifts.DryRun, "dry-run", "", "",
+		"simulate an install. If --dry-run is set with no option being specified or as '--dry-run=client', "+
+			"it will not attempt cluster connections. Setting '--dry-run=server' allows attempting cluster connections.")
 }
 
 // Registers flags specific to command, run.

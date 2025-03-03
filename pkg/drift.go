@@ -53,6 +53,7 @@ type Drift struct {
 	TempPath             string     `json:"temp_path,omitempty"               yaml:"temp_path,omitempty"`
 	CustomDiff           string     `json:"custom_diff,omitempty"             yaml:"custom_diff,omitempty"`
 	Name                 string     `json:"name,omitempty"                    yaml:"name,omitempty"`
+	DryRun               string     `json:"dryrun,omitempty"                  yaml:"dryrun,omitempty"`
 	OutputFormat         string     `json:"output_format,omitempty"           yaml:"output_format,omitempty"`
 	releasesToSkip       []resourcesInfo
 	json                 bool
