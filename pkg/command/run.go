@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
+	"strings"
 
 	"github.com/nikhilsbhat/helm-drift/pkg/deviation"
 )
@@ -22,6 +23,27 @@ func (cmd *command) RunKubeDiffCmd(deviation *deviation.Deviation) (*deviation.D
 				deviation.HasDrift = true
 				deviation.Deviations = string(out)
 				cmd.log.Debugf("found diffs for '%s' with name '%s'", deviation.Kind, deviation.Kind)
+			case 2:
+				if string(out) != "" && strings.Contains(string(out), "not found") {
+					cmd.log.Debugf("namespace not found, call diff function for file '%s'", deviation.ManifestPath)
+					// ... Diff function ...
+					diffCmd := exec.Command("diff", "-u", "-N", "/dev/null", deviation.ManifestPath)
+					out, err := diffCmd.CombinedOutput()
+					if errors.As(err, &exerr) {
+						switch exerr.ExitCode() {
+						case 1:
+							deviation.HasDrift = true
+							deviation.Deviations = string(out)
+							cmd.log.Debugf("found diffs for '%s' with name '%s'", deviation.Kind, deviation.Kind)
+						default:
+							return deviation, fmt.Errorf("running diff errored with exit code: %w ,with message: %s", err, string(out))
+						}
+					} else {
+						cmd.log.Debugf("no diffs found for '%s' with name '%s'", deviation.Kind, deviation.Kind)
+					}
+				} else {
+					return deviation, fmt.Errorf("running kubectl diff errored with exit code: %w ,with message: %s", err, string(out))
+				}
 			default:
 				return deviation, fmt.Errorf("running kubectl diff errored with exit code: %w ,with message: %s", err, string(out))
 			}
