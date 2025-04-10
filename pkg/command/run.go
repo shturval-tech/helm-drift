@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os/exec"
-	"strings"
+	"regexp"
 
 	"github.com/nikhilsbhat/helm-drift/pkg/deviation"
 )
@@ -24,9 +24,8 @@ func (cmd *command) RunKubeDiffCmd(deviation *deviation.Deviation) (*deviation.D
 				deviation.Deviations = string(out)
 				cmd.log.Debugf("found diffs for '%s' with name '%s'", deviation.Kind, deviation.Kind)
 			case 2:
-				if string(out) != "" && strings.Contains(string(out), "not found") {
+				if string(out) != "" && regexp.MustCompile(`Error from server \(NotFound\): namespaces ".*" not found`).MatchString(string(out)) {
 					cmd.log.Debugf("namespace not found, call diff function for file '%s'", deviation.ManifestPath)
-					// ... Diff function ...
 					diffCmd := exec.Command("diff", "-u", "-N", "/dev/null", deviation.ManifestPath)
 					out, err := diffCmd.CombinedOutput()
 					if errors.As(err, &exerr) {
