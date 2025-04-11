@@ -25,7 +25,7 @@ GOPROXY=${BUILDER_GOPROXY} GOPRIVATE=gitlab.jet.su CGO_ENABLED=0 GOOS=linux GOAR
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
 FROM repo.dso.jet.msk.su/service/alpine:3.21.3
 WORKDIR /
-RUN apk update && apk add --no-cache helm kubectl git
+RUN apk update && apk add --no-cache bash helm kubectl git
 COPY --from=builder /workspace/helm-drift /root/.local/share/helm/plugins/helm-drift/bin/
 COPY --from=builder /workspace/plugin.yaml /root/.local/share/helm/plugins/helm-drift/
 
