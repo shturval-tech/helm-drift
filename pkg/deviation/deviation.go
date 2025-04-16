@@ -6,10 +6,10 @@ import (
 
 //nolint:varnamelen
 const (
-	Failed  = "FAILED"
-	Success = "SUCCESS"
-	Yes     = "YES"
-	No      = "NO"
+	DriftFound = "DRIFT FOUND"
+	Success    = "SUCCESS"
+	Yes        = "YES"
+	No         = "NO"
 )
 
 // DriftedRelease holds drift information of the selected release/chart.
@@ -54,7 +54,7 @@ func (dvn *DriftedReleases) Status() string {
 	})
 
 	if hasDrift {
-		return Failed
+		return DriftFound
 	}
 
 	return Success
@@ -108,7 +108,7 @@ func (dvn *Deviations) Status() string {
 	})
 
 	if hasDrift {
-		return Failed
+		return DriftFound
 	}
 
 	return Success
