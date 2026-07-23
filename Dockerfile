@@ -1,5 +1,5 @@
 # Build the manager binary
-FROM golang:1.24.2 AS builder
+FROM golang:1.26.5 AS builder
 
 # Build-time args
 ARG BUILDER_GOPROXY
@@ -23,11 +23,11 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
 
 # Use distroless as minimal base image to package the manager binary
 # Refer to https://github.com/GoogleContainerTools/distroless for more details
-FROM alpine:3.22.1
+FROM alpine:3.23.5
 
 WORKDIR /
 
-RUN apk add --no-cache bash helm kubectl git ca-certificates jq
+RUN apk add --no-cache bash helm kubectl git ca-certificates jq yq
 
 COPY --from=builder /workspace/helm-drift /root/.local/share/helm/plugins/helm-drift/bin/
 COPY --from=builder /workspace/plugin.yaml /root/.local/share/helm/plugins/helm-drift/
