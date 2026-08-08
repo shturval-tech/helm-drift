@@ -82,14 +82,14 @@ func (drift *Drift) runTable(table *tablewriter.Table, deviations []*deviation.D
 	table.SetCaption(true, drift.getCaption())
 
 	if !drift.NoColor {
-		if dvn.Status() == deviation.Failed {
+		if dvn.Status() == deviation.DriftFound {
 			table.SetFooterColor(tablewriter.Colors{}, tablewriter.Colors{tablewriter.Bold}, tablewriter.Colors{tablewriter.FgRedColor})
 		} else {
 			table.SetFooterColor(tablewriter.Colors{}, tablewriter.Colors{tablewriter.Bold}, tablewriter.Colors{tablewriter.FgGreenColor})
 		}
 	}
 
-	return hasDrift == deviation.Failed
+	return hasDrift == deviation.DriftFound
 }
 
 func (drift *Drift) allTable(table *tablewriter.Table, deviations []*deviation.DriftedRelease) bool {
@@ -121,14 +121,14 @@ func (drift *Drift) allTable(table *tablewriter.Table, deviations []*deviation.D
 	table.SetFooter([]string{"", "Status", dvnStatus})
 
 	if !drift.NoColor {
-		if dvnStatus == deviation.Failed {
+		if dvnStatus == deviation.DriftFound {
 			table.SetFooterColor(tablewriter.Colors{}, tablewriter.Colors{tablewriter.Bold}, tablewriter.Colors{tablewriter.FgRedColor})
 		} else {
 			table.SetFooterColor(tablewriter.Colors{}, tablewriter.Colors{tablewriter.Bold}, tablewriter.Colors{tablewriter.FgGreenColor})
 		}
 	}
 
-	return dvnStatus == deviation.Failed
+	return dvnStatus == deviation.DriftFound
 }
 
 func (drift *Drift) print(drifts []*deviation.DriftedRelease) {

@@ -34,6 +34,10 @@ func (drift *Drift) getChartFromTemplate() ([]byte, error) {
 		flags = append(flags, "--debug")
 	}
 
+	if len(drift.DryRun) != 0 {
+		flags = append(flags, "--dry-run="+drift.DryRun)
+	}
+
 	if drift.SkipTests {
 		flags = append(flags, "--skip-tests")
 	}
